@@ -1,6 +1,3 @@
-Nama,Stok,Harga
-Sabun,25,3000
 Minyak Goreng,10,16000
 Gula,20,10000
-Garam,15,5000
-Kopi Sachet,100,2000
+Garam,20,5000

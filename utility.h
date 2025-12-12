@@ -4,9 +4,10 @@
 #include <string>
 using namespace std;
 
-void writeFile(string data[][3], int &jumlahProduk);
 bool isNumber(const string& s);
 string toLower(string s);
-bool containsIgnoreCase(string text, string key);
+bool ignoreCase(string text, string key);
+int produkTermurah(string data[100][3], int i, int jumlahProduk, int termurah);
+int produkTermahal(string data[100][3], int i, int jumlahProduk, int termurah);
 
 #endif

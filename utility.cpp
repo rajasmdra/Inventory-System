@@ -7,25 +7,6 @@
 
 using namespace std;
 
-void writeFile(string data[][3], int &jumlahProduk) {
-    ifstream file("data.txt");
-    string line;
-
-
-    while (getline(file, line)) {
-        stringstream ss(line);
-        string value;
-        int col = 0;
-
-        while (getline(ss, value, ',')) {
-            data[jumlahProduk][col] = value;
-            col++;
-        }
-        jumlahProduk++;
-    }
-    file.close();
-}
-
 bool isNumber(const string& s) {
     for (char c : s)
         if (!isdigit(c)) return false;
@@ -37,9 +18,39 @@ string toLower(string s) {
     return s;
 }
 
-bool containsIgnoreCase(string text, string key) {
+bool ignoreCase(string text, string key) {
     text = toLower(text);
     key  = toLower(key);
-    return text.find(key) != string::npos; // partial matching
+    return text.find(key) != string::npos;
 }
 
+int produkTermurah(string data[100][3], int i, int jumlahProduk, int termurah) {
+    if (i >= jumlahProduk) return termurah;
+
+    // pastikan harga tidak kosong
+    if (!data[i][2].empty() && !data[termurah][2].empty()) {
+        int hargaNow = stoi(data[i][2]);
+        int hargaMin = stoi(data[termurah][2]);
+
+        if (hargaNow < hargaMin) {
+            termurah = i;
+        }
+    }
+
+    return produkTermurah(data, i + 1, jumlahProduk, termurah);
+}
+
+int produkTermahal(string data[100][3], int i, int jumlahProduk, int termahal) {
+    if (i >= jumlahProduk) return termahal;
+
+    if (!data[i][2].empty() && !data[termahal][2].empty()) {
+        int hargaNow = stoi(data[i][2]);
+        int hargaMax = stoi(data[termahal][2]);
+
+        if (hargaNow > hargaMax) {
+            termahal = i;
+        }
+    }
+
+    return produkTermahal(data, i + 1, jumlahProduk, termahal);
+}

@@ -28,36 +28,36 @@ void app::run() {
 
     int menu;
     while (true) {
-        cout << "\n=== MENU ===\n";
-        cout << "1. Tambah Produk\n";
-        cout << "2. Tampilkan Produk\n";
-        cout << "3. Edit Produk\n";
-        cout << "4. Hapus Produk\n";
-        cout << "5. Cari Produk\n";
-        cout << "6. Keluar\n";
+        cout << endl << "=== MENU ===" << endl;
+        cout << "1. Tambah Produk" << endl;
+        cout << "2. Tampilkan Produk" << endl;
+        cout << "3. Edit Produk" << endl;
+        cout << "4. Hapus Produk" << endl;
+        cout << "5. Cari Produk" << endl;
+        cout << "6. Urutkan Produk" << endl;
+        cout << "7. Analisis Data" << endl;
+        cout << "8. Simpan Data" << endl;
+        cout << "9. Keluar" << endl;
         cout << "Pilih menu: ";
         cin >> menu;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.ignore();
 
         if (menu == 1) tambahProduk(data, jumlahProduk);
         else if (menu == 2) tampilkanProduk(data, jumlahProduk);
         else if (menu == 3) editProduk(data, jumlahProduk);
         else if (menu == 4) hapusProduk(data, jumlahProduk);
         else if (menu == 5) cariProduk(data, jumlahProduk);
-        else if (menu == 6) break;
-        else cout << "Input tidak valid.\n";
+        else if (menu == 6) urutkanProduk(data, jumlahProduk);
+        else if (menu == 7) analisisProduk(data, jumlahProduk);
+        else if (menu == 8) simpanData(data, jumlahProduk);
+        else if (menu == 9) break;
+        else cout << "Input tidak valid." << endl;
     }
-
-    ofstream out("data.txt", ios::trunc);
-    for (int i = 0; i < jumlahProduk; i++) {
-        out << data[i][0] << "," << data[i][1] << "," << data[i][2] << endl;
-    }
-    out.close();
 }
 
 void app::tambahProduk(string data[100][3], int &jumlahProduk) {
     if (jumlahProduk >= 100) {
-        cout << "Data penuh, tidak bisa menambah produk.\n";
+        cout << "Data penuh, tidak bisa menambah produk." << endl;
         return;
     }
 
@@ -68,10 +68,10 @@ void app::tambahProduk(string data[100][3], int &jumlahProduk) {
     cin >> stok;
     cout << "Masukkan harga produk: ";
     cin >> harga;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.ignore();
 
     if (!isNumber(stok) || !isNumber(harga)) {
-        cout << "Stok dan harga harus angka!\n";
+        cout << "Stok dan harga harus angka!" << endl;
         return;
     }
     
@@ -80,20 +80,24 @@ void app::tambahProduk(string data[100][3], int &jumlahProduk) {
     data[jumlahProduk][1] = stok;
     data[jumlahProduk][2] = harga;
 
-    cout << "Produk berhasil ditambahkan!\n";
+    cout << "Produk berhasil ditambahkan!" << endl;
 }
 
 void app::tampilkanProduk(string data[100][3], int jumlahProduk) {
     if (jumlahProduk == 0) {
-        cout << "Belum ada data produk.\n";
+        cout << "Belum ada data produk." << endl;
         return;
     }
-    cout << "\n=== DAFTAR PRODUK ===\n";
+    cout << endl << "=== DAFTAR PRODUK ===" << endl;
+    cout << left;
+    cout << setw(4) << "ID"
+        << setw(15) << "Nama Produk"
+        << setw(15) << "Stok"
+        << setw(15) << "Harga" << endl;
     for (int i = 0; i < jumlahProduk; i++) {
         cout << left;
-        if (i == 0) cout << setw(4) << "ID";
-        else cout << setw(4) << i;
-        cout << setw(15) << data[i][0]
+        cout << setw(4) << i + 1
+            << setw(15) << data[i][0]
             << setw(15) << data[i][1]
             << setw(15) << data[i][2] << endl;
     }
@@ -111,7 +115,7 @@ void app::hapusProduk(string data[100][3], int &jumlahProduk) {
         else break;
     }
 
-    for (int i = hapus; i < jumlahProduk; i++) {
+    for (int i = hapus - 1; i < jumlahProduk; i++) {
         data[i][0] = data [i + 1][0];
         data[i][1] = data [i + 1][1];
         data[i][2] = data [i + 1][2];
@@ -148,6 +152,7 @@ void app::editProduk(string data[100][3], int jumlahProduk) {
     cin.ignore();
     getline(cin, infoBaru);
 
+    produkEdit--;
     if (infoEdit == 1) data[produkEdit][0] = infoBaru;
     if (infoEdit == 2) data[produkEdit][1] = infoBaru;
     if (infoEdit == 3) data[produkEdit][2] = infoBaru;
@@ -157,46 +162,135 @@ void app::editProduk(string data[100][3], int jumlahProduk) {
 
 void app::cariProduk(string data[100][3], int jumlahProduk) {
     string target;
-    int infoCari;
     bool found = false;
 
-    while (true) {
-        cout << "1. Nama Produk\n";
-        cout << "2. Stok\n";
-        cout << "3. Harga\n";
-        cout << "Cari berdasarkan: ";
-        cin >> infoCari;
-
-        if (infoCari < 1 || infoCari > 3)
-            cout << "Input tidak valid, silahkan coba lagi\n";
-        else
-            break;
-    }
-
     cout << "Masukkan kata kunci: ";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.ignore();
     getline(cin, target);
 
-    cout << "\n=== HASIL PENCARIAN ===\n\n";
+    cout << endl << "=== HASIL PENCARIAN ===" << endl;
+
+    cout << left;
+    cout << setw(4) << "ID"
+        << setw(15) << "Nama Produk"
+        << setw(15) << "Stok"
+        << setw(15) << "Harga" << endl;
 
     for (int i = 0; i < jumlahProduk; i++) {
-        bool match = false;
-
-        if (infoCari == 1) match = containsIgnoreCase(data[i][0], target);
-        if (infoCari == 2) match = containsIgnoreCase(data[i][1], target);
-        if (infoCari == 3) match = containsIgnoreCase(data[i][2], target);
-
-        if (match) {
-            cout << "ID    : " << i << endl;
-            cout << "Nama  : " << data[i][0] << endl;
-            cout << "Stok  : " << data[i][1] << endl;
-            cout << "Harga : " << data[i][2] << endl;
-            cout << "--------------------------\n";
+        if (ignoreCase(data[i][0], target)) {
+            cout << left;
+            cout << setw(4) << i + 1
+                << setw(15) << data[i][0]
+                << setw(15) << data[i][1]
+                << setw(15) << data[i][2] << endl;
             found = true;
         }
     }
 
     if (!found) {
-        cout << "Produk tidak ditemukan.\n";
+        cout << "Produk tidak ditemukan." << endl;
     }
+}
+
+void app::urutkanProduk(string data[100][3], int jumlahProduk) {
+    int pilihan, urutan;
+
+    if (jumlahProduk == 0) {
+        cout << "Belum ada data.\n";
+        return;
+    }
+
+    string sortData[100][3];
+    for (int i = 0; i < jumlahProduk; i++) {
+        sortData[i][0] = data[i][0];
+        sortData[i][1] = data[i][1];
+        sortData[i][2] = data[i][2];
+    }
+
+    cout << "\n=== SORTING PRODUK (Shell Sort) ===\n";
+    cout << "1. Nama Produk\n";
+    cout << "2. Stok\n";
+    cout << "3. Harga\n";
+    cout << "Pilih kategori sorting: ";
+    cin >> pilihan;
+
+    cout << "1. Urutkan dari terkecil" << endl;
+    cout << "2. Urutkan dari terbesar" << endl;
+    cout << "Pilih urutan: ";
+    cin >> urutan;
+
+    for (int gap = jumlahProduk / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < jumlahProduk; i++) {
+
+            string a = sortData[i][0];
+            string b = sortData[i][1];
+            string c = sortData[i][2];
+
+            int j = i;
+
+            while (j >= gap) {
+                bool kondisi = false;
+
+                if (pilihan == 1) { 
+                    if (urutan == 1) kondisi = a < sortData[j-gap][0];
+                    else kondisi = a > sortData[j-gap][0];
+                }
+                else if (pilihan == 2) {
+                    int x = stoi(b);
+                    int y = stoi(sortData[j-gap][1]);
+                    if (urutan == 1) kondisi = x < y;
+                    else kondisi = x > y;
+                }
+                else if (pilihan == 3) {
+                    int x = stoi(c);
+                    int y = stoi(sortData[j-gap][2]);
+                    if (urutan == 1) kondisi = x < y;
+                    else kondisi = x > y;
+                }
+
+                if (!kondisi) break;
+
+                sortData[j][0] = sortData[j-gap][0];
+                sortData[j][1] = sortData[j-gap][1];
+                sortData[j][2] = sortData[j-gap][2];
+
+                j -= gap;
+            }
+
+            sortData[j][0] = a;
+            sortData[j][1] = b;
+            sortData[j][2] = c;
+        }
+    }
+    
+    cout << endl << "=== HASIL SORTING ===" << endl;
+    cout << left;
+    cout << setw(4) << "ID"
+        << setw(15) << "Nama Produk"
+        << setw(15) << "Stok"
+        << setw(15) << "Harga" << endl;
+    for (int i = 0; i < jumlahProduk; i++) {
+        cout << left 
+            << setw(4) << i + 1
+            << setw(15) << sortData[i][0]
+            << setw(15) << sortData[i][1]
+            << setw(15) << sortData[i][2]<< endl;
+    }
+}
+
+void app::analisisProduk(string data[100][3], int jumlahProduk) {
+    string termahal= 0, termurah = 0;
+    for (int i = 0; i < jumlahProduk; i++) {
+    }
+    cout << "Jumlah produk: " << jumlahProduk << endl;
+    cout << "Produk termurah: " << produkTermurah(data, 0, jumlahProduk, 0) << endl;
+    cout << "Produk termahal: " << produkTermahal(data, 0, jumlahProduk, 0) << endl;
+}
+
+void app::simpanData(string data[100][3], int jumlahProduk) {
+    ofstream out("data.txt", ios::trunc);
+    for (int i = 0; i < jumlahProduk; i++) {
+        out << data[i][0] << "," << data[i][1] << "," << data[i][2] << endl;
+    }
+    out.close();
 }
