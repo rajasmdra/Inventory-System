@@ -193,7 +193,7 @@ void app::cariProduk(string data[100][3], int jumlahProduk) {
 }
 
 void app::urutkanProduk(string data[100][3], int jumlahProduk) {
-    int pilihan, urutan;
+    int pilihan, urutan, totalSwap = 0;
 
     if (jumlahProduk == 0) {
         cout << "Belum ada data.\n";
@@ -220,28 +220,28 @@ void app::urutkanProduk(string data[100][3], int jumlahProduk) {
     cin >> urutan;
 
     for (int gap = jumlahProduk / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < jumlahProduk; i++) {
+        cout << endl << "=== Gap: " << gap << " ===" << endl;
 
+        for (int i = gap; i < jumlahProduk; i++) {
             string a = sortData[i][0];
             string b = sortData[i][1];
             string c = sortData[i][2];
-
             int j = i;
 
             while (j >= gap) {
                 bool kondisi = false;
 
-                if (pilihan == 1) { 
+                if (pilihan == 1) { // Nama
                     if (urutan == 1) kondisi = a < sortData[j-gap][0];
                     else kondisi = a > sortData[j-gap][0];
                 }
-                else if (pilihan == 2) {
+                else if (pilihan == 2) { // Stok
                     int x = stoi(b);
                     int y = stoi(sortData[j-gap][1]);
                     if (urutan == 1) kondisi = x < y;
                     else kondisi = x > y;
                 }
-                else if (pilihan == 3) {
+                else if (pilihan == 3) { // Harga
                     int x = stoi(c);
                     int y = stoi(sortData[j-gap][2]);
                     if (urutan == 1) kondisi = x < y;
@@ -250,41 +250,55 @@ void app::urutkanProduk(string data[100][3], int jumlahProduk) {
 
                 if (!kondisi) break;
 
+                totalSwap++;
+                printf("%d. Swap: data[%d] -> data[%d] (geser ke kanan)\n", totalSwap, j - gap, j);
+
                 sortData[j][0] = sortData[j-gap][0];
                 sortData[j][1] = sortData[j-gap][1];
                 sortData[j][2] = sortData[j-gap][2];
 
+                cout << "Array: ";
+                for (int i = 0; i < jumlahProduk; i++) {
+                    if (i != 0) cout << ", ";
+                    cout << sortData[i][pilihan - 1];
+                }
+                cout << endl;
+
                 j -= gap;
             }
+
+            printf("Temp (%s | %s | %s) disimpan di data[%d]\n", a.c_str(), b.c_str(), c.c_str(), j);
 
             sortData[j][0] = a;
             sortData[j][1] = b;
             sortData[j][2] = c;
+
+            cout << "Array: ";
+            for (int i = 0; i < jumlahProduk; i++) {
+                if (i != 0) cout << ", ";
+                cout << sortData[i][pilihan - 1];
+            }
+            cout << endl;
         }
     }
-    
-    cout << endl << "=== HASIL SORTING ===" << endl;
-    cout << left;
-    cout << setw(4) << "ID"
-        << setw(15) << "Nama Produk"
-        << setw(15) << "Stok"
-        << setw(15) << "Harga" << endl;
-    for (int i = 0; i < jumlahProduk; i++) {
-        cout << left 
-            << setw(4) << i + 1
-            << setw(15) << sortData[i][0]
-            << setw(15) << sortData[i][1]
-            << setw(15) << sortData[i][2]<< endl;
-    }
+    cout << endl << "HASIL SORTING" << endl;
+    tampilkanProduk(sortData, jumlahProduk);
+    cout << "Total Swap: " << totalSwap << endl;
 }
 
 void app::analisisProduk(string data[100][3], int jumlahProduk) {
-    string termahal= 0, termurah = 0;
-    for (int i = 0; i < jumlahProduk; i++) {
-    }
-    cout << "Jumlah produk: " << jumlahProduk << endl;
-    cout << "Produk termurah: " << produkTermurah(data, 0, jumlahProduk, 0) << endl;
-    cout << "Produk termahal: " << produkTermahal(data, 0, jumlahProduk, 0) << endl;
+    int termurah = produkTermurah(data, 0, jumlahProduk, 0);
+    int termahal = produkTermahal(data, 0, jumlahProduk, 0);
+    int terdikit = stokTerdikit(data, 0, jumlahProduk, 0);
+    int terbanyak = stokTerbanyak(data, 0, jumlahProduk, 0);
+
+    cout << endl << "=== ANALISIS DATA ===" << endl;
+    cout << "Jumlah produk\t: " << jumlahProduk << endl;
+    cout << "Produk termurah\t: " << data[termurah][0] << " (Rp." << data[termurah][2] << ") " << endl;
+    cout << "Produk termahal\t: " << data[termahal][0] << " (Rp." << data[termahal][2] << ") " << endl;
+    cout << "Total Stok\t: " << totalStok(data, 0, jumlahProduk, 0) << endl;
+    cout << "Stok Terdikit\t: " << data[terdikit][0] << " (" << data[terdikit][1] << ") " << endl;
+    cout << "Stok Terbanyak\t: " << data[terbanyak][0] << " (" << data[terbanyak][1] << ") " << endl;
 }
 
 void app::simpanData(string data[100][3], int jumlahProduk) {

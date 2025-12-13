@@ -1,3 +1,9 @@
 Minyak Goreng,10,16000
-Gula,20,10000
+Gula Pasir,20,10000
 Garam,20,5000
+Beras,15,12000
+Telur,30,18000
+Susu,25,15000
+Teh,18,8000
+Tepung Terigu,22,9000
+Mie Instan,50,3000

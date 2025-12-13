@@ -24,33 +24,54 @@ bool ignoreCase(string text, string key) {
     return text.find(key) != string::npos;
 }
 
-int produkTermurah(string data[100][3], int i, int jumlahProduk, int termurah) {
-    if (i >= jumlahProduk) return termurah;
 
-    // pastikan harga tidak kosong
-    if (!data[i][2].empty() && !data[termurah][2].empty()) {
-        int hargaNow = stoi(data[i][2]);
-        int hargaMin = stoi(data[termurah][2]);
+int produkTermurah(string data[][3], int i, int jumlahProduk, int termurah) {
+    if (i == jumlahProduk) return termurah;
 
-        if (hargaNow < hargaMin) {
-            termurah = i;
-        }
+    int harga = stoi(data[i][2]);
+    if (harga < stoi(data[termurah][2])) {
+        termurah = i;
     }
 
     return produkTermurah(data, i + 1, jumlahProduk, termurah);
 }
 
-int produkTermahal(string data[100][3], int i, int jumlahProduk, int termahal) {
-    if (i >= jumlahProduk) return termahal;
+int produkTermahal(string data[][3], int i, int jumlahProduk, int termahal) {
+    if (i == jumlahProduk) return termahal;
 
-    if (!data[i][2].empty() && !data[termahal][2].empty()) {
-        int hargaNow = stoi(data[i][2]);
-        int hargaMax = stoi(data[termahal][2]);
-
-        if (hargaNow > hargaMax) {
-            termahal = i;
-        }
+    int harga = stoi(data[i][2]);
+    if (harga > stoi(data[termahal][2])) {
+        termahal = i;
     }
 
     return produkTermahal(data, i + 1, jumlahProduk, termahal);
+}
+
+int totalStok(string data[100][3], int i, int jumlahProduk, int jumlahStok) {
+    if (i == jumlahProduk) return jumlahStok;
+
+    jumlahStok += stoi(data[i][1]);
+    return totalStok(data, i + 1, jumlahProduk, jumlahStok);
+}
+
+int stokTerbanyak(string data[][3], int i, int jumlahProduk, int terbanyak) {
+    if (i == jumlahProduk) return terbanyak;
+
+    int stok = stoi(data[i][1]);
+    if (stok > stoi(data[terbanyak][1])) {
+        terbanyak = i;
+    }
+
+    return stokTerbanyak(data, i + 1, jumlahProduk, terbanyak);
+}
+
+int stokTerdikit(string data[][3], int i, int jumlahProduk, int terdikit) {
+    if (i == jumlahProduk) return terdikit;
+
+    int stok = stoi(data[i][1]);
+    if (stok < stoi(data[terdikit][1])) {
+        terdikit = i;
+    }
+
+    return stokTerdikit(data, i + 1, jumlahProduk, terdikit);
 }
